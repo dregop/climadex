@@ -55,6 +55,7 @@ app.get('/factories', async (c: Context) => {
   return c.json(
     factories.map(
       (factory: IDbFactory): IFactory => ({
+        id: factory.id,
         factoryName: factory.factory_name,
         address: factory.address,
         country: factory.country,

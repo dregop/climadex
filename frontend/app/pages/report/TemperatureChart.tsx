@@ -54,7 +54,7 @@ export function TemperatureChart({ reportId }: TemperatureChartProps) {
   if (allNull) return <p>No temperature data available for this factory.</p>;
 
   return (
-    <div style={{ background: 'white', padding: '20px', borderRadius: '2px', color: '#173940' }}>
+    <div style={{ background: 'white', padding: '10px', borderRadius: '2px', color: '#173940' }}>
       <h3 style={{ textAlign: 'center' }}>Projected Temperature Evolution at Location</h3>
 
       <ResponsiveContainer width="90%" height={400}>
@@ -71,19 +71,16 @@ export function TemperatureChart({ reportId }: TemperatureChartProps) {
           <CartesianGrid strokeDasharray="2 2" stroke="rgba(200,200,200,0.5)" />
 
           {/* Axe X */}
-          <XAxis dataKey="timeframe" stroke="#173940" />
+          <XAxis dataKey="timeframe" stroke="#173940" tick={{ fontSize: 12 }}/>
 
           {/* Axe Y avec unité */}
-          <YAxis label={{ value: "°C", angle: -90, position: "insideLeft", fill: '#173940'}} stroke="#173940" domain={[15, 'auto']}/>
+          <YAxis label={{ value: "°C", angle: -90, position: "insideLeft", fill: '#173940'}} stroke="#173940" domain={[16, 'auto']} tick={{ fontSize: 12 }}/>
 
           {/* Tooltip stylisé */}
           <Tooltip 
             contentStyle={{ backgroundColor: 'white', color: '#173940', borderRadius: '5px' }} 
             labelStyle={{ color: '#ff7300' }}
           />
-
-          {/* Légende */}
-          <Legend verticalAlign="top" wrapperStyle={{ color: '#173940' }} />
 
           {/* Ligne stylisée avec points visibles */}
           <Line

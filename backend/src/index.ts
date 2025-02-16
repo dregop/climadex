@@ -40,6 +40,41 @@ app.get('/', (c) => {
   );
 });
 
+app.get('/factories/:id/temperature', async (c) => {
+  const factoryId = c.req.param('id');
+
+  // Fetch factory details (optional if needed)
+  const client = await dbClientPromise;
+  const factory = await client.get('SELECT * FROM factories WHERE id = ?', [factoryId]);
+
+  if (!factory) {
+    return c.json({ error: "Factory not found" }, 404);
+  }
+
+  console.log(factory);
+
+  // Simulated temperature data (replace with real calculations)
+  const temperatures: Record<"2030" | "2050" | "2070" | "2090", number | undefined> = {
+    "2030": 0,
+    "2050": 0,
+    "2070": 0,
+    "2090": 0,
+  };
+
+  for (const timeframe of TIMEFRAMES) {
+    temperatures[timeframe] = getMeanTemperatureWarmestQuarter({
+      latitude: factory.latitude,
+      longitude: factory.longitude,
+      timeframe: timeframe,
+    }) ?? undefined; // Remplace `null` par `undefined`
+  }
+
+  console.log(temperatures);
+
+  return c.json(temperatures);
+});
+
+
 app.get('/factories', async (c: Context) => {
   const client = await dbClientPromise;
 
@@ -66,6 +101,28 @@ app.get('/factories', async (c: Context) => {
     )
   );
 });
+
+app.get('/factories/:id', async (c: Context) => {
+  const client = await dbClientPromise;
+  const { id } = c.req.param(); // Get the ID from the URL
+
+  const factory = await client.get('SELECT * FROM factories WHERE id = ?;', [id]);
+
+  if (!factory) {
+    return c.json({ error: 'Factory not found' }, 404);
+  }
+
+  return c.json({
+    id: factory.id,
+    factoryName: factory.factory_name,
+    address: factory.address,
+    country: factory.country,
+    latitude: factory.latitude,
+    longitude: factory.longitude,
+    yearlyRevenue: factory.yearly_revenue,
+  });
+});
+
 
 app.post('/factories', async (c: Context) => {
   const client = await dbClientPromise;

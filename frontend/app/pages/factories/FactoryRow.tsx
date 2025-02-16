@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { IFactory } from '@climadex/types';
 
 export function FactoryRow(factory: IFactory) {
-  console.log(factory)
   const formatter = Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',

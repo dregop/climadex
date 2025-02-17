@@ -1,5 +1,55 @@
-form {
+/* Form container */
+.add-factory-form {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  padding: 20px;
+  background-color: #f5f5f5;
+  width: 50%;
+}
+
+@media (max-width: 768px) {
+  .add-factory-form {
+    width: 90%;
+  }
+}
+
+.add-factory-form label {
+  margin-top: 10px;
+  font-weight: bold;
+  display: block;
+  /* Ensure labels are on their own line */
+}
+
+.add-factory-form input {
+  padding: 8px;
+  margin-bottom: 12px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  width: 100%;
+  /* Input fields take up the full width of the container */
+  box-sizing: border-box;
+  /* Ensures padding is included in width calculation */
+}
+
+.add-factory-form input[type="submit"] {
+  background-color: #173940;
+  color: white;
+  cursor: pointer;
+  width: auto;
+  /* Make the submit button auto-sized */
+  margin-top: 10px;
+}
+
+.add-factory-form input[type="submit"]:hover {
+  filter: brightness(1.1);
+}
+
+.add-factory-form p {
+  color: #ec5e5e;
+  font-size: small;
+  margin-bottom: 5px;
+}
+
+.add-factory-form .error {
+  color: #ec5e5e;
 }

@@ -3,6 +3,7 @@ table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0px;
+  min-width: 500px;
 }
 
 thead {
@@ -19,7 +20,7 @@ tr {
 th {
   padding: 8px 0;
   text-align: left;
-  background-color: rgb(44, 112, 62);
+  background-color: #173940;
   color: rgb(255, 255, 255);
 }
 
@@ -30,4 +31,43 @@ td {
 th:nth-of-type(1),
 td:nth-of-type(1) {
   padding: 8px;
+}
+
+.low-risk {
+  color: #6b9d80;
+}
+
+.high-risk {
+  color: #ec5e5e;
+}
+
+/* Rendre le tableau scrollable horizontalement sur mobile */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Adapter le tableau pour les petits écrans */
+@media (max-width: 768px) {
+
+  .table thead {
+      display: none;
+    }
+
+  th,
+  td {
+    font-size: 0.9rem;
+    padding: 8px;
+    word-break: normal;
+    overflow-wrap: anywhere;
+  }
+
+  /* Rendre le tableau plus compact */
+  th {
+    padding: 10px 5px;
+  }
+
+  td {
+    padding: 8px 5px;
+  }
 }

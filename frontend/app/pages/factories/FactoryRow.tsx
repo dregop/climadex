@@ -8,6 +8,12 @@ export function FactoryRow(factory: IFactory) {
     currency: 'USD',
   });
 
+  const getRiskClass = (risk) => {
+    if (risk === "High") return "high-risk";
+    if (risk === "Low") return "low-risk";
+    return ""; // Default color
+  };
+
   return (
     <tr key={factory.id}>
       <td>
@@ -18,6 +24,7 @@ export function FactoryRow(factory: IFactory) {
       <td>{factory.latitude}</td>
       <td>{factory.longitude}</td>
       <td>{formatter.format(+factory.yearlyRevenue)}</td>
+      <td className={getRiskClass(factory.temperatureRisk)}>{factory.temperatureRisk}</td>
     </tr>
   );
 }

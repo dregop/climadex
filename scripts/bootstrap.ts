@@ -11,6 +11,7 @@ CREATE TABLE factories (
     latitude REAL NOT NULL,
     longitude REAL NOT NULL,
     yearly_revenue INTEGER NOT NULL
+    temperature_risk STRING
 );
 `;
 

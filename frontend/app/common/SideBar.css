@@ -6,3 +6,18 @@
   text-align: center;
   background-color: #173940;
 }
+
+
+@media (max-width: 768px) {
+  #sidebar {
+    top: 0;
+    width: 18px;
+    min-height: 100vh;
+    text-align: center;
+    background-color: #173940;
+  }
+  img {
+    width: 20px;
+  }
+
+}

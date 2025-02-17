@@ -45,36 +45,37 @@ export function AddFactoryForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} action="#">
-      {formError && <p role="alert">An error occurred : {formError}</p>}
-      {errors.factoryName && <p role="alert">{errors.factoryName.message}</p>}
+    <form onSubmit={handleSubmit(onSubmit)} className="add-factory-form">
+      {formError && <p role="alert" className="error">An error occurred: {formError}</p>}
+
       <label>
-        Factory name :{' '}
+        Factory name: 
         <input
           {...register('factoryName', {
             required: 'Please give the factory a name.',
           })}
         />
       </label>
-      {errors.country && <p role="alert">{errors.country.message}</p>}
+      {errors.factoryName && <p role="alert" className="error">{errors.factoryName.message}</p>}
+
       <label>
-        Country :{' '}
+        Country: 
         <input
           {...register('country', { required: 'Please specify a country.' })}
         />
       </label>
+      {errors.country && <p role="alert" className="error">{errors.country.message}</p>}
 
-      {errors.address && <p role="alert">{errors.address.message}</p>}
       <label>
-        Address :{' '}
+        Address: 
         <input
           {...register('address', { required: 'Please enter an address.' })}
         />
       </label>
+      {errors.address && <p role="alert" className="error">{errors.address.message}</p>}
 
-      {errors.latitude && <p role="alert">{errors.latitude.message}</p>}
       <label>
-        Latitude :{' '}
+        Latitude: 
         <input
           type="text"
           {...register('latitude', {
@@ -91,10 +92,10 @@ export function AddFactoryForm() {
           })}
         />
       </label>
+      {errors.latitude && <p role="alert" className="error">{errors.latitude.message}</p>}
 
-      {errors.longitude && <p role="alert">{errors.longitude.message}</p>}
       <label>
-        Longitude :{' '}
+        Longitude: 
         <input
           type="text"
           {...register('longitude', {
@@ -111,12 +112,10 @@ export function AddFactoryForm() {
           })}
         />
       </label>
+      {errors.longitude && <p role="alert" className="error">{errors.longitude.message}</p>}
 
-      {errors.yearlyRevenue && (
-        <p role="alert">{errors.yearlyRevenue.message}</p>
-      )}
       <label>
-        Yearly revenue :{' '}
+        Yearly revenue: 
         <input
           type="text"
           {...register('yearlyRevenue', {
@@ -129,6 +128,7 @@ export function AddFactoryForm() {
           })}
         />
       </label>
+      {errors.yearlyRevenue && <p role="alert" className="error">{errors.yearlyRevenue.message}</p>}
 
       <input type="submit" value="Add" />
     </form>

@@ -3,3 +3,11 @@
   height: 100%;
   width: 100%;
 }
+
+@media (max-width: 768px) {
+  #container {
+    padding: 10px 20px;
+    height: 100%;
+    width: 100%;
+  }
+}

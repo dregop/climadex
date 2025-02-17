@@ -4,6 +4,14 @@ import { IFactory } from '@climadex/types';
 import './index.css';
 import { TemperatureChart } from './TemperatureChart';
 import { FactoryMap } from './FactoryMap';
+import Tooltip from '../../common/Tooltip';
+
+
+
+
+
+
+////////// FAIRE LA COMPATIBILIT2 MOBILE
 
 export function ReportPage() {
   const { reportId } = useParams<{ reportId: string }>();
@@ -33,6 +41,12 @@ export function ReportPage() {
   if (loading) return <p>Loading factory details...</p>;
   if (error) return <p>Error: {error}</p>;
 
+  const getRiskClass = (risk) => {
+    if (risk === "High") return "high-risk";
+    if (risk === "Low") return "low-risk";
+    return ""; // Default color
+  };
+
   return factory ? (
     <div className="report-page">
       <div className="navigation-links">
@@ -55,8 +69,8 @@ export function ReportPage() {
 
 
       <div className='content'>
-        <div className='company-info'>
-          <h3>Company's Information</h3>
+        <div className='factory-info'>
+          <h3>Factory's Information</h3>
           <FactoryMap factory={factory} />
 
           <p>Address: {factory.address}</p>
@@ -64,10 +78,16 @@ export function ReportPage() {
           <p>Latitude: {factory.latitude}</p>
           <p>Longitude: {factory.longitude}</p>
           <p>Yearly Revenue: ${factory.yearlyRevenue.toLocaleString()}</p>
+          <p>Température Risk 
+            <Tooltip text="Temperature risk is high if the increase exceeds 1.8°C from 2030 or if the average surpasses 35°C. Hot climates (desert/tropical) are also at risk above 30°C. Otherwise, the risk is low." />:  
+            <span className={getRiskClass(factory.temperatureRisk)}> 
+              {factory.temperatureRisk}
+            </span>
+            </p>
         </div>
 
 
-        <div style={{ width: "50%", height: '400px', textAlign: 'center', marginLeft: 20}}>
+        <div className='factory-temp'>
           <TemperatureChart reportId={reportId} /> 
         </div>
       </div>  

@@ -8,6 +8,7 @@ import { IFactory } from '@climadex/types';
 import { IDbFactory } from './types';
 
 import { getMeanTemperatureWarmestQuarter, TIMEFRAMES } from './indicators';
+import { getClimateApproximation, tempAvgRiskTreshold, updateFactoriesTemperatureRiskBatch } from './updateTemperatureRisk';
 
 const app = new Hono();
 
@@ -53,7 +54,6 @@ app.get('/factories/:id/temperature', async (c) => {
 
   console.log(factory);
 
-  // Simulated temperature data (replace with real calculations)
   const temperatures: Record<"2030" | "2050" | "2070" | "2090", number | undefined> = {
     "2030": 0,
     "2050": 0,
@@ -97,6 +97,7 @@ app.get('/factories', async (c: Context) => {
         latitude: factory.latitude,
         longitude: factory.longitude,
         yearlyRevenue: factory.yearly_revenue,
+        temperatureRisk: factory.temperature_risk
       })
     )
   );
@@ -120,6 +121,7 @@ app.get('/factories/:id', async (c: Context) => {
     latitude: factory.latitude,
     longitude: factory.longitude,
     yearlyRevenue: factory.yearly_revenue,
+    temperatureRisk: factory.temperature_risk
   });
 });
 
@@ -133,6 +135,50 @@ app.post('/factories', async (c: Context) => {
     return c.text('Invalid body.', 400);
   }
 
+  const temperatures: Record<"2030" | "2050" | "2070" | "2090", number | undefined> = {
+    "2030": 0,
+    "2050": 0,
+    "2070": 0,
+    "2090": 0,
+  };
+
+  
+
+  for (const timeframe of TIMEFRAMES) {
+    temperatures[timeframe] = getMeanTemperatureWarmestQuarter({
+      latitude: parseInt(latitude),
+      longitude: parseInt(longitude),
+      timeframe: timeframe,
+    }) ?? undefined;
+  }
+
+  console.log(temperatures);
+
+  // Filtrer les valeurs définies et calculer la moyenne
+  const validTemperatures = Object.values(temperatures).filter(
+    (temp): temp is number => temp !== undefined
+  );
+
+  const avgTemp = validTemperatures.length > 0
+    ? validTemperatures.reduce((sum, t) => sum + (t ?? 0), 0) / validTemperatures.length
+    : undefined;
+
+  let temperatureRisk = "Unknown";
+
+  const climateData = getClimateApproximation(latitude);
+
+  // Risk Algorithme
+  if (avgTemp !== undefined && temperatures["2030"] !== undefined) {
+    if (((avgTemp - temperatures["2030"]) > tempAvgRiskTreshold || avgTemp > 35)) {
+      temperatureRisk = "High";
+    } else if (avgTemp > 30 && (climateData.climate === 'Desert' || climateData.climate === 'Tropical')) {
+      temperatureRisk = "High";
+    } else {
+      temperatureRisk = "Low";
+    }
+  }
+
+
   const factory: IFactory = {
     factoryName,
     country,
@@ -140,20 +186,33 @@ app.post('/factories', async (c: Context) => {
     latitude: +latitude,
     longitude: +longitude,
     yearlyRevenue: +yearlyRevenue,
+    temperatureRisk
   };
 
+  console.log(factory);
+
   await client.run(
-    `INSERT INTO factories (factory_name, address, country, latitude, longitude, yearly_revenue)
-VALUES (?, ?, ?, ?, ?, ?);`,
+    `INSERT INTO factories (factory_name, address, country, latitude, longitude, yearly_revenue, temperature_risk)
+VALUES (?, ?, ?, ?, ?, ?, ?);`,
     factory.factoryName,
     factory.address,
     factory.country,
     factory.latitude,
     factory.longitude,
-    factory.yearlyRevenue
+    factory.yearlyRevenue,
+    factory.temperatureRisk
   );
 
   return c.json({ result: 'OK' });
+});
+
+app.post("/update-temperature-risk", async (c: Context) => {
+  try {
+    await updateFactoriesTemperatureRiskBatch();
+    return c.json({ result: 'Temperature risk updated for all factories' });
+  } catch (error) {
+    return c.json({ result: 'Error updating temperature risk.' });
+  }
 });
 
 serve(app);

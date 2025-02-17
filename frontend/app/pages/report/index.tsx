@@ -6,13 +6,6 @@ import { TemperatureChart } from './TemperatureChart';
 import { FactoryMap } from './FactoryMap';
 import Tooltip from '../../common/Tooltip';
 
-
-
-
-
-
-////////// FAIRE LA COMPATIBILIT2 MOBILE
-
 export function ReportPage() {
   const { reportId } = useParams<{ reportId: string }>();
   const [factory, setFactory] = useState<IFactory | null>(null);
@@ -44,25 +37,13 @@ export function ReportPage() {
   const getRiskClass = (risk) => {
     if (risk === "High") return "high-risk";
     if (risk === "Low") return "low-risk";
-    return ""; // Default color
+    return "";
   };
 
   return factory ? (
     <div className="report-page">
       <div className="navigation-links">
         <Link to="/" className="nav-link back-link">←</Link>
-
-        {reportId && parseInt(reportId) > 1 && (
-          <Link to={`/reports/${parseInt(reportId) - 1}`} className="nav-link prev-link">
-            Prev
-          </Link>
-        )}
-
-        {reportId && parseInt(reportId) <= 30 && (
-          <Link to={`/reports/${parseInt(reportId) + 1}`} className="nav-link next-link">
-            Next
-          </Link>
-        )}
 
         <h2 className="nav-link">{factory.factoryName}</h2>
       </div>

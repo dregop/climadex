@@ -17,7 +17,6 @@
   margin-top: 10px;
   font-weight: bold;
   display: block;
-  /* Ensure labels are on their own line */
 }
 
 .add-factory-form input {
@@ -26,9 +25,7 @@
   border-radius: 5px;
   border: 1px solid #ddd;
   width: 100%;
-  /* Input fields take up the full width of the container */
   box-sizing: border-box;
-  /* Ensures padding is included in width calculation */
 }
 
 .add-factory-form input[type="submit"] {
@@ -36,7 +33,6 @@
   color: white;
   cursor: pointer;
   width: auto;
-  /* Make the submit button auto-sized */
   margin-top: 10px;
 }
 

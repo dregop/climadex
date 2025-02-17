@@ -15,3 +15,9 @@ a:visited {
   text-decoration: none;
   color: rgb(17, 0, 166);
 }
+
+@media (max-width: 768px) {
+  #main {
+    text-align: center;
+  }
+}

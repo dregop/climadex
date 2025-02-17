@@ -44,7 +44,6 @@ app.get('/', (c) => {
 app.get('/factories/:id/temperature', async (c) => {
   const factoryId = c.req.param('id');
 
-  // Fetch factory details (optional if needed)
   const client = await dbClientPromise;
   const factory = await client.get('SELECT * FROM factories WHERE id = ?', [factoryId]);
 
@@ -66,7 +65,7 @@ app.get('/factories/:id/temperature', async (c) => {
       latitude: factory.latitude,
       longitude: factory.longitude,
       timeframe: timeframe,
-    }) ?? undefined; // Remplace `null` par `undefined`
+    }) ?? undefined; // replace `null` by `undefined`
   }
 
   console.log(temperatures);
@@ -77,31 +76,56 @@ app.get('/factories/:id/temperature', async (c) => {
 
 app.get('/factories', async (c: Context) => {
   const client = await dbClientPromise;
+  type SortableColumns = 'factoryName' | 'address' | 'country' | 'latitude' | 'longitude' | 'yearlyRevenue' | 'temperatureRisk';
 
   const query = c.req.query('q');
 
-  const factories = query
+  const sortBy: SortableColumns = c.req.query('sortBy') as SortableColumns || 'factory_name';
+  const sortOrder = c.req.query('sortOrder') || 'asc';
+  const limit = parseInt(c.req.query('limit') || '20', 10);
+  const page = parseInt(c.req.query('page') || '1', 10);
+
+  const offset = (page - 1) * limit;
+
+  const columnMappings: Record<SortableColumns, string> = {
+    factoryName: 'factory_name',
+    address: 'address',
+    country: 'country',
+    latitude: 'latitude',
+    longitude: 'longitude',
+    yearlyRevenue: 'yearly_revenue',
+    temperatureRisk: 'temperature_risk',
+  };
+
+  const sortClause = `ORDER BY ${columnMappings[sortBy]} ${sortOrder.toUpperCase()}`;
+
+  // First we request all factories filter by name
+  const allFactories = query
     ? await client.all(
-        `SELECT * FROM factories WHERE LOWER( factory_name ) LIKE ?;`,
+        `SELECT * FROM factories WHERE LOWER(factory_name) LIKE ? ${sortClause};`,
         [`%${query.toLowerCase()}%`]
       )
-    : await client.all('SELECT * FROM factories');
+    : await client.all(
+        `SELECT * FROM factories ${sortClause};`
+      );
+
+  // Then why apply pagination
+  const paginatedFactories = allFactories.slice(offset, offset + limit);
 
   return c.json(
-    factories.map(
-      (factory: IDbFactory): IFactory => ({
-        id: factory.id,
-        factoryName: factory.factory_name,
-        address: factory.address,
-        country: factory.country,
-        latitude: factory.latitude,
-        longitude: factory.longitude,
-        yearlyRevenue: factory.yearly_revenue,
-        temperatureRisk: factory.temperature_risk
-      })
-    )
+    paginatedFactories.map((factory: IDbFactory): IFactory => ({
+      id: factory.id,
+      factoryName: factory.factory_name,
+      address: factory.address,
+      country: factory.country,
+      latitude: factory.latitude,
+      longitude: factory.longitude,
+      yearlyRevenue: factory.yearly_revenue,
+      temperatureRisk: factory.temperature_risk,
+    }))
   );
 });
+
 
 app.get('/factories/:id', async (c: Context) => {
   const client = await dbClientPromise;
@@ -142,7 +166,6 @@ app.post('/factories', async (c: Context) => {
     "2090": 0,
   };
 
-  
 
   for (const timeframe of TIMEFRAMES) {
     temperatures[timeframe] = getMeanTemperatureWarmestQuarter({
@@ -154,7 +177,7 @@ app.post('/factories', async (c: Context) => {
 
   console.log(temperatures);
 
-  // Filtrer les valeurs définies et calculer la moyenne
+  // Filter on define values then calculate mean
   const validTemperatures = Object.values(temperatures).filter(
     (temp): temp is number => temp !== undefined
   );
@@ -177,7 +200,6 @@ app.post('/factories', async (c: Context) => {
       temperatureRisk = "Low";
     }
   }
-
 
   const factory: IFactory = {
     factoryName,

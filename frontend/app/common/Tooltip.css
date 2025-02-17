@@ -1,10 +1,8 @@
-/* Conteneur du tooltip */
 .tooltip-container {
     position: relative;
     display: inline-block;
 }
 
-/* Bouton d'info */
 .tooltip-button {
     padding: 1px 1px;
     margin-left: 2px;
@@ -21,7 +19,6 @@
     background-color: #d6d6d6;
 }
 
-/* La bulle d'info */
 .tooltip-bubble {
     position: absolute;
     bottom: 120%;
@@ -32,17 +29,14 @@
     padding: 8px 12px;
     border-radius: 6px;
     max-width: 400px;
-    /* Largeur max */
     word-wrap: break-word;
-    /* Coupe les mots si nécessaire */
     font-size: 14px;
     visibility: hidden;
     opacity: 0;
     transition: opacity 0.2s ease-in-out;
-    z-index: 9999;
+    z-index: 9999; /* to be over map */
 }
 
-/* Flèche en bas de la bulle */
 .tooltip-bubble::after {
     content: "";
     position: absolute;
@@ -54,7 +48,6 @@
     border-color: #333 transparent transparent transparent;
 }
 
-/* Affichage du tooltip au clic */
 .tooltip-container.show .tooltip-bubble {
     visibility: visible;
     opacity: 1;

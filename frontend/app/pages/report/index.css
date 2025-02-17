@@ -30,14 +30,6 @@
     color: white !important;
 }
 
-.prev-link {
-    border: 2px solid #6b9d80;
-}
-
-.next-link {
-    border: 2px solid #eb925b;
-}
-
 .nav-link:hover {
     filter: brightness(1.1);
 }

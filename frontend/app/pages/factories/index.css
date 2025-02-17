@@ -24,7 +24,6 @@
   text-decoration: none;
 }
 
-/* Rendre le header plus compact sur mobile */
 @media (max-width: 768px) {
   #header {
     flex-direction: column;
@@ -37,4 +36,39 @@
     padding: 10px;
     font-size: 1rem;
   }
+}
+
+input {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+label {
+  font-weight: bold;
+  display: block;
+}
+
+p {
+  font-size: small;
+}
+
+.pagination button {
+  margin-top: 5px;
+  cursor: pointer;
+  background-color: #173940;
+  font-weight: bold;
+  color: rgb(255, 255, 255);
+  border-radius: 5px;
+  border: 1px solid;
+  padding: 3px 8px;
+  min-width: 32px;
+  line-height: 1.75;
+}
+
+.pagination button:disabled {
+  background-color: grey;
+  cursor: default;
 }

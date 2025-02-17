@@ -3,7 +3,6 @@ import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
 
 const BATCH_SIZE = 1000; // Process in chunks of 1000 factories
-// const temperatureCache = new Map(); // Cache temperatures by (lat, long)
 export const tempAvgRiskTreshold = 1.8;
 
 const dbClientPromise = open({
@@ -11,6 +10,7 @@ const dbClientPromise = open({
   driver: sqlite3.Database,
 });
 
+// check if column in DB
 async function makeSureTempRiskColumnExists(client: any) {
   // Check if the column exists
   const columns = await client.all(`PRAGMA table_info(factories)`);

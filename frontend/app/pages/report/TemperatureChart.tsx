@@ -27,7 +27,6 @@ export function TemperatureChart({ reportId }: TemperatureChartProps) {
         if (!response.ok) throw new Error("Failed to fetch data");
         const json: Record<number, unknown> = await response.json();
 
-        // Convert API response to chart-friendly format
         const formattedData = Object.entries(json).map(([timeframe, temp]) => ({
           timeframe,
           temperature: typeof temp === "number" ? temp : null,
@@ -59,7 +58,6 @@ export function TemperatureChart({ reportId }: TemperatureChartProps) {
 
       <ResponsiveContainer width="90%" height={400}>
         <LineChart data={data}>
-          {/* Dégradé pour la ligne */}
           <defs>
             <linearGradient id="tempGradient" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#ff7300" stopOpacity={1} />
@@ -67,26 +65,20 @@ export function TemperatureChart({ reportId }: TemperatureChartProps) {
             </linearGradient>
           </defs>
 
-          {/* Grille douce */}
           <CartesianGrid strokeDasharray="2 2" stroke="rgba(200,200,200,0.5)" />
-
-          {/* Axe X */}
           <XAxis dataKey="timeframe" stroke="#173940" tick={{ fontSize: 12 }}/>
 
-          {/* Axe Y avec unité */}
           <YAxis label={{ value: "°C", angle: -90, position: "insideLeft", fill: '#173940'}} stroke="#173940" domain={[16, 'auto']} tick={{ fontSize: 12 }}/>
 
-          {/* Tooltip stylisé */}
           <Tooltip 
             contentStyle={{ backgroundColor: 'white', color: '#173940', borderRadius: '5px' }} 
             labelStyle={{ color: '#ff7300' }}
           />
 
-          {/* Ligne stylisée avec points visibles */}
           <Line
             type="monotone"
             dataKey="temperature"
-            stroke="url(#tempGradient)" // Utilisation du dégradé
+            stroke="url(#tempGradient)"
             strokeWidth={2}
             dot={{ fill: '#173940', stroke: '#ff7300', strokeWidth: 1, r: 3 }}
             activeDot={{ r: 5 }}
